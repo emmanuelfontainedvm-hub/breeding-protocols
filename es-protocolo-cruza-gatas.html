@@ -1,0 +1,457 @@
+\<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Éxito en la Cruza</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX compilation in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print {
+            @page { margin: 1.5cm; }
+            body { background: white; -webkit-print-color-adjust: exact; }
+            nav, footer, button { display: none !important; }
+            .print-hidden { display: none !important; }
+            .print-pb-10 { padding-bottom: 2.5rem !important; }
+            .print-pt-10 { padding-top: 2.5rem !important; }
+            .print-shadow-none { shadow: none !important; box-shadow: none !important; }
+            .print-border { border: 1px solid #eee !important; }
+            .print-block { display: block !important; }
+            .break-inside-avoid { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Icons (Inline SVGs for portability) ---
+        const IconBase = ({ children, className, style }) => (
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className={className}
+                style={style}
+            >
+                {children}
+            </svg>
+        );
+
+        const CheckCircle = (props) => <IconBase {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></IconBase>;
+        const AlertTriangle = (props) => <IconBase {...props}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></IconBase>;
+        const Info = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></IconBase>;
+        const Cat = (props) => <IconBase {...props}><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3.1-9-7.56c0-1.25.5-2.5 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5"/></IconBase>;
+        const HeartPulse = (props) => <IconBase {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-2 1.5 3.5h5.27"/></IconBase>;
+        const Home = (props) => <IconBase {...props}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></IconBase>;
+        const Clock = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
+        const Eye = (props) => <IconBase {...props}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></IconBase>;
+        const Printer = (props) => <IconBase {...props}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></IconBase>;
+        const Search = (props) => <IconBase {...props}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></IconBase>;
+        const Activity = (props) => <IconBase {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></IconBase>;
+        const ChevronDown = (props) => <IconBase {...props}><polyline points="6 9 12 15 18 9"/></IconBase>;
+        const ChevronUp = (props) => <IconBase {...props}><polyline points="18 15 12 9 6 15"/></IconBase>;
+
+        // --- Main Application ---
+        const App = () => {
+            const [activeSection, setActiveSection] = useState(null);
+            
+            // Brand Palette
+            const colors = {
+                primary: '#382547', // Deep Purple
+                accent: '#ff7f50',  // Coral
+                lightBg: '#f9f7fb',
+                white: '#ffffff',
+                textMain: '#1f2937',
+                textMuted: '#6b7280'
+            };
+
+            // Data Structure (Optimized Spanish - Mexico)
+            const sections = [
+                {
+                    id: 'health',
+                    title: 'Evaluación de Salud de la Hembra',
+                    icon: <HeartPulse className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Condición Corporal (CC)',
+                            check: 'Hembra con CC de 5/9 (peso ideal)',
+                            why: 'El tejido graso es hormonalmente activo. El sobrepeso o la delgadez extrema reducen la fertilidad y afectan la gestación.'
+                        },
+                        {
+                            label: 'Tamizaje Genético y de Enfermedades',
+                            check: 'Tipo sanguíneo confirmado y pruebas de VIF/LeV vigentes',
+                            why: 'Previene la isoeritrolisis neonatal (incompatibilidad sanguínea). Las enfermedades infecciosas comprometen la fertilidad.'
+                        },
+                        {
+                            label: 'Salud Gastrointestinal',
+                            check: 'Sin diarrea crónica ni vómitos',
+                            why: "La salud intestinal de la madre impacta directamente el desarrollo del microbioma de los gatitos."
+                        },
+                        {
+                            label: 'Suplementación con Ácido Fólico',
+                            check: 'Iniciada 2 semanas antes de la cruza',
+                            why: 'Reduce el riesgo de paladar hendido (el defecto congénito más común en gatitos).'
+                        },
+                        {
+                            label: 'Examen de Aptitud Reproductiva',
+                            check: 'Revisión veterinaria y análisis de sangre completos',
+                            why: 'Permite detectar enfermedades renales u otras condiciones ocultas (silenciosas) que afectan la fertilidad.'
+                        }
+                    ]
+                },
+                {
+                    id: 'environment',
+                    title: 'Optimización del Entorno',
+                    icon: <Home className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Control del Estrés',
+                            check: 'Rutina estricta. Sin cambios recientes en el ambiente',
+                            why: 'El estrés crónico altera el microbioma y puede bloquear el celo. Los gatos son animales de hábitos.'
+                        },
+                        {
+                            label: 'Difusor de Feromonas',
+                            check: 'Feliway o equivalente activo',
+                            why: 'Reduce la ansiedad territorial y favorece un comportamiento materno tranquilo.'
+                        },
+                        {
+                            label: 'Fotoperiodo (Luz Artificial)',
+                            check: '12 a 14 horas de luz al día',
+                            why: 'La gata es reproductora estacional. La luz "enciende" el ciclo. Menos de 12 horas suprime la actividad ovárica.'
+                        },
+                        {
+                            label: 'Área de Maternidad',
+                            check: 'Espacio limpio y tranquilo listo 1-2 semanas antes',
+                            why: 'Reduce el estrés. La hembra necesita tiempo para adaptarse al área de parto (nesting).'
+                        }
+                    ]
+                },
+                {
+                    id: 'timing',
+                    title: 'Verificación del Tiempo (Timing)',
+                    icon: <Clock className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Signos Claros de Celo',
+                            check: 'Vocalización, lordosis, rodamiento. Celo confirmado (Día 3+ recomendado)',
+                            why: 'El pico de fertilidad suele ser al 3er día. Cuidado con los celos silenciosos en Persas (usar citología vaginal).'
+                        },
+                        {
+                            label: 'Protocolo de Cruza (3 Días)',
+                            check: 'Montas programadas Día 1, Día 2 y Día 3',
+                            why: 'La ovulación es inducida por la monta. 50% ovulan tras 1 monta, >90% tras múltiples montas.'
+                        },
+                        {
+                            label: 'Prueba de Progesterona Post-Cruza',
+                            check: 'Programada 5-7 días después de la última monta',
+                            why: "Confirma que ovuló (P4 >5 ng/mL). La falta de ovulación es la causa #1 de infertilidad."
+                        }
+                    ]
+                },
+                {
+                    id: 'male',
+                    title: 'Preparación del Semental',
+                    icon: <Cat className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Condición Corporal (CC)',
+                            check: 'Semental con CC de 5/9 (peso ideal)',
+                            why: 'El exceso de grasa escrotal aumenta la temperatura testicular y daña la calidad del esperma.'
+                        },
+                        {
+                            label: 'Calidad del Semen',
+                            check: 'Espermiograma reciente (si es posible)',
+                            why: 'Los machos jóvenes (<1 año) suelen tener semen de baja calidad. Los Persas maduran tarde (esperar 12+ meses).'
+                        },
+                        {
+                            label: 'Madurez Sexual',
+                            check: 'Testículos descendidos, espículas peneanas visibles',
+                            why: 'Las espículas del pene son indispensables para detonar la ovulación durante la monta.'
+                        }
+                    ]
+                },
+                {
+                    id: 'observation',
+                    title: 'Supervisión de la Cruza',
+                    icon: <Eye className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Respetar Territorio del Macho',
+                            check: 'La hembra visita al semental',
+                            why: 'El macho debe estar confiado en su territorio. Sacarlo de su ambiente suele inhibir la libido.'
+                        },
+                        {
+                            label: 'Montas Efectivas Confirmadas',
+                            check: 'Mínimo 3 montas observadas en el periodo',
+                            why: 'No asumas nada. La falta de penetración real es una causa mayor de fallo.'
+                        },
+                        {
+                            label: 'Reacción Post-Coital (Grito)',
+                            check: 'Agresividad inmediata, rodamiento, aseo genital',
+                            why: 'Esta reacción refleja confirma que el estímulo fue suficiente para esperar la ovulación.'
+                        }
+                    ]
+                }
+            ];
+
+            const redFlags = [
+                "La hembra no entra en celo (anestro) a pesar de >12h de luz",
+                "Rechazo persistente a la monta (problema conductual o físico)",
+                "Ausencia de «Grito Coital» o reacción post-monta",
+                "Progesterona <5 ng/mL al día 7 (Fallo en la ovulación)",
+                "Estrés intenso o agresividad anormal de la hembra",
+                "El semental es indiferente o incapaz de concretar"
+            ];
+
+            const handlePrint = () => {
+                window.print();
+            };
+
+            return (
+                <div className="min-h-screen font-sans text-gray-800 bg-[#f9f7fb]">
+                    
+                    {/* Navigation / Top Bar */}
+                    <nav className="sticky top-0 z-50 shadow-md" style={{ backgroundColor: colors.primary }}>
+                        <div className="max-w-4xl px-4 py-4 mx-auto flex justify-between items-center">
+                            <div className="flex items-center space-x-2 text-white">
+                                <Cat className="w-6 h-6" style={{ color: colors.accent }} />
+                            </div>
+                            <button 
+                                onClick={handlePrint}
+                                className="hidden md:flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full transition-all text-sm font-medium"
+                            >
+                                <Printer className="w-4 h-4" />
+                                <span>Guardar como PDF</span>
+                            </button>
+                        </div>
+                    </nav>
+
+                    {/* Hero Section */}
+                    <header className="relative text-white pb-24 pt-16 px-6 text-center overflow-hidden print-pb-10 print-pt-10" style={{ backgroundColor: colors.primary }}>
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                        <div className="max-w-3xl mx-auto relative z-10">
+                            <div className="inline-block px-3 py-1 mb-6 text-xs font-bold tracking-widest uppercase rounded-full bg-white/10 border border-white/20 text-white">
+                                Estándar Veterinario de Referencia
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
+                                Protocolo de Éxito <br/>
+                                <span style={{ color: colors.accent }}>en la Cruza</span>
+                            </h1>
+                            <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto font-light">
+                                Tu lista de verificación diagnóstica pre-cruza para maximizar la fertilidad y prevenir fallos comunes.
+                            </p>
+                            
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-4 print-hidden">
+                                <button 
+                                    onClick={() => {
+                                        const el = document.getElementById('start-checklist');
+                                        el?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="px-8 py-4 font-bold text-white rounded-lg shadow-lg transform transition hover:scale-105"
+                                    style={{ backgroundColor: colors.accent }}
+                                >
+                                    Iniciar Checklist
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Decorative Curve */}
+                        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+                            <svg className="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#f9f7fb"></path>
+                            </svg>
+                        </div>
+                    </header>
+
+                    <main id="start-checklist" className="max-w-4xl mx-auto px-4 -mt-16 pb-20 relative z-20">
+                        
+                        {/* Introduction Card */}
+                        <div className="bg-white rounded-xl shadow-xl p-8 mb-10 border-t-4 print-shadow-none print-border print-mb-6" style={{ borderColor: colors.accent }}>
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-full bg-purple-100 hidden md:block">
+                                    <Activity className="w-6 h-6 text-purple-700" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2" style={{ color: colors.primary }}>¿Por qué usar este protocolo?</h3>
+                                    <p className="text-gray-600 leading-relaxed">
+                                        Este sistema previene los 5 fallos reproductivos más comunes. Diseñado por el Dr. Emmanuel Fontaine, esta lista asegura que no omitas pasos críticos en la fase previa a la cruza.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Checklist Sections */}
+                        <div className="space-y-8">
+                            {sections.map((section, idx) => (
+                                <div key={section.id} className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:shadow-xl print-shadow-none print-border break-inside-avoid">
+                                    <div 
+                                        className="p-6 border-b border-gray-100 flex items-center justify-between cursor-pointer select-none bg-white"
+                                        onClick={() => setActiveSection(activeSection === section.id ? null : section.id)}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: colors.primary }}>
+                                                {section.icon}
+                                            </div>
+                                            <div>
+                                                <h2 className="text-xl font-bold text-gray-900">{section.title}</h2>
+                                                <span className="text-sm font-medium" style={{ color: colors.accent }}>{section.items.length} Puntos de Control</span>
+                                            </div>
+                                        </div>
+                                        <div className="text-gray-400 print-hidden">
+                                            {activeSection === section.id ? <ChevronUp /> : <ChevronDown />}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Content */}
+                                    <div className={`bg-gray-50 px-6 py-4 space-y-4 ${activeSection === section.id ? 'block' : 'hidden md:block'} print-block`}>
+                                        {section.items.map((item, i) => (
+                                            <ChecklistItem key={i} item={item} colors={colors} index={i} />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Red Flags Section */}
+                        <div className="mt-12 bg-red-50 rounded-2xl border border-red-100 p-8 break-inside-avoid">
+                            <div className="flex items-center gap-3 mb-6">
+                                <AlertTriangle className="w-8 h-8 text-red-500" />
+                                <h2 className="text-2xl font-bold text-gray-900">Signos de Alarma: Cuándo Llamar al Veterinario</h2>
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                {redFlags.map((flag, i) => (
+                                    <div key={i} className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm border-l-4 border-red-400">
+                                        <span className="text-red-500 text-lg font-bold">✕</span>
+                                        <p className="text-gray-700 font-medium">{flag}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Author Footer */}
+                        <div className="mt-12 text-center border-t border-gray-200 pt-8 pb-4">
+                            <p className="text-gray-500 font-medium">© Dr. Emmanuel Fontaine, DVM, MSc, PhD, ECAR Diplomate</p>
+                        </div>
+
+                    </main>
+
+                    {/* CTA / Footer Area */}
+                    <footer className="text-white py-16 px-4 print-hidden" style={{ backgroundColor: colors.primary }}>
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h2 className="text-3xl font-bold mb-6">¿Listo para el Sistema Completo?</h2>
+                            <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
+                                Dentro de <strong>El Cofre del Criador</strong>, encontrarás mi sistema operativo completo para criadores: los mismos marcos de trabajo que he desarrollado durante más de 20 años de práctica veterinaria en reproducción.
+                            </p>
+                            
+                            <div className="grid md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto mb-10">
+                                <FeatureItem text="Protocolos completos de reproducción felina" />
+                                <FeatureItem text="Sistemas de evaluación de salud" />
+                                <FeatureItem text="Marcos de gestión del programa de cría" />
+                                <FeatureItem text="Herramientas para la toma de decisiones" />
+                            </div>
+
+                            <a 
+                                href="https://emmanuel-fontaine-dogandcatreproduction.teachable.com/p/cofre-criador-compra-exitosa-recursos-perros-gatos" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="px-10 py-5 text-lg font-bold text-white rounded-full shadow-2xl transform transition hover:scale-105 hover:shadow-coral-500/20 inline-block" 
+                                style={{ backgroundColor: colors.accent }}
+                            >
+                                Explorar El Cofre del Criador →
+                            </a>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        // --- Helper Components ---
+
+        const ChecklistItem = ({ item, colors, index }) => {
+            const [isChecked, setIsChecked] = useState(false);
+            const [showWhy, setShowWhy] = useState(false);
+
+            return (
+                <div className={`group relative bg-white p-4 rounded-xl border transition-all duration-200 ${isChecked ? 'border-green-200 bg-green-50/30' : 'border-gray-200 hover:border-purple-200'}`}>
+                    <div className="flex items-start gap-4">
+                        <button 
+                            onClick={() => setIsChecked(!isChecked)}
+                            className={`mt-1 flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                                isChecked 
+                                ? 'bg-green-500 border-green-500 text-white' 
+                                : 'border-gray-300 text-transparent hover:border-purple-400'
+                            }`}
+                        >
+                            <CheckCircle className="w-4 h-4" />
+                        </button>
+
+                        <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h4 className={`font-bold text-lg leading-tight mb-1 transition-colors ${isChecked ? 'text-green-800' : 'text-gray-800'}`}>
+                                        {item.label}
+                                    </h4>
+                                    <p className={`text-gray-600 ${isChecked ? 'text-green-700' : ''}`}>
+                                        {item.check}
+                                    </p>
+                                </div>
+                                
+                                <button 
+                                    onClick={() => setShowWhy(!showWhy)}
+                                    className="ml-2 p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-purple-600 transition-colors"
+                                    title="Por qué es importante"
+                                >
+                                    <Info className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className={`overflow-hidden transition-all duration-300 ${showWhy ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
+                                <div className="bg-blue-50 p-3 rounded-lg text-sm text-blue-800 flex gap-2 border border-blue-100">
+                                    <Search className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <span className="font-bold block mb-1 text-xs uppercase tracking-wider opacity-70">Por qué es importante</span>
+                                        {item.why}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FeatureItem = ({ text }) => (
+            <div className="flex items-center gap-3 bg-white/10 p-3 rounded-lg">
+                <div className="w-2 h-2 rounded-full bg-[#ff7f50]"></div>
+                <span className="font-medium text-gray-100">{text}</span>
+            </div>
+        );
+
+        // Render the App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

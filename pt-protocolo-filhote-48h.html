@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Sobrevivência do Filhote: 48 Horas | Dr. Emmanuel Fontaine</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Config for Palette -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#382547',
+                            light: '#563A6B', 
+                            accent: '#ff7f50',
+                            accentHover: '#e66a3c',
+                            bg: '#F8F7FA',
+                            surface: '#ffffff'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* EXACT PRINT STYLES */
+        /* Garante que o PDF fique idêntico à tela */
+        @media print {
+            @page {
+                margin: 0.5cm;
+                size: auto; 
+            }
+
+            /* Força a impressão de cores de fundo e imagens */
+            body { 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+            }
+
+            /* Esconde apenas o botão flutuante */
+            .no-print { display: none !important; }
+
+            /* Evita quebras de página estranhas dentro dos cartões */
+            .print-break-avoid {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                display: block; 
+            }
+        }
+        
+        .hero-pattern {
+            background-color: #382547;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-gray-800 font-sans antialiased">
+
+    <!-- Floating Print Button (Hidden in PDF) -->
+    <button onclick="window.print()" class="no-print fixed bottom-6 right-6 bg-brand-accent hover:bg-brand-accentHover text-white p-4 rounded-full shadow-xl z-50 transition-transform hover:scale-105 flex items-center gap-2 group">
+        <i data-lucide="printer" class="w-6 h-6"></i>
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 whitespace-nowrap">Salvar como PDF</span>
+    </button>
+
+    <!-- Header / Hero -->
+    <header class="hero-pattern text-white pt-16 pb-24 px-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-brand-accent"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-1 rounded-full text-brand-accent text-sm font-semibold mb-6 border border-brand-accent/20">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Protocolo Veterinário
+            </div>
+            <h1 class="font-serif text-4xl md:text-6xl font-bold mb-4 leading-tight">
+                O Protocolo de <span class="text-brand-accent">Sobrevivência do Filhote</span>: 48 Horas
+            </h1>
+            <p class="text-xl text-gray-200 max-w-2xl mx-auto font-light">
+                Seu checklist hora-a-hora para identificar problemas antes que se tornem emergências.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 -mt-16 relative z-20 pb-24">
+
+        <!-- Intro Card -->
+        <div class="print-break-avoid bg-white rounded-xl shadow-xl p-8 mb-12 border-t-4 border-brand-accent">
+            <div class="flex items-start gap-4">
+                <div class="bg-brand-bg p-3 rounded-lg hidden md:block">
+                    <i data-lucide="clock" class="w-8 h-8 text-brand-dark"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-brand-dark mb-2">Por que as primeiras 48 horas são cruciais</h2>
+                    <p class="text-gray-600">
+                        A mortalidade neonatal é mais alta nos dois primeiros dias. Este protocolo fornece um quadro de avaliação estruturado. Siga estes pontos de controle rigorosamente para garantir a saúde e o desenvolvimento da sua ninhada.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hour 0 Section -->
+        <section class="print-break-avoid mb-12">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-brand-accent text-white font-bold px-4 py-2 rounded-lg shadow-md">HORA 0</div>
+                <h3 class="text-2xl font-bold text-brand-dark">Nascimento a 2 Horas</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200 text-sm uppercase tracking-wider text-gray-500">
+                                <th class="p-4 font-semibold">Ação</th>
+                                <th class="p-4 font-semibold">Normal</th>
+                                <th class="p-4 font-semibold text-red-600">Emergência - Ligar para o Vet</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="p-4 font-medium text-brand-dark">Desobstruir vias aéreas</td>
+                                <td class="p-4 text-green-700 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Respirando, gengivas rosadas</td>
+                                <td class="p-4 text-red-600 bg-red-50/50 font-medium">Cor azul/cinza, 'gasping' (buscando ar)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-brand-dark">Escore APGAR</td>
+                                <td class="p-4 text-green-700">7-10</td>
+                                <td class="p-4 text-red-600 bg-red-50/50 font-medium">Abaixo de 4</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-brand-dark">Pesar o filhote</td>
+                                <td class="p-4 text-green-700">Registrar peso base</td>
+                                <td class="p-4 text-red-600 bg-red-50/50 font-medium">Anormalmente pequeno para a raça</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-brand-dark">Temperatura</td>
+                                <td class="p-4 text-gray-500 italic">Não aferida ainda (muito estresse)</td>
+                                <td class="p-4 text-red-600 bg-red-50/50 font-medium">Frio ao toque, flácido</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-brand-dark">Sucção</td>
+                                <td class="p-4 text-green-700">Tentando encontrar o teto</td>
+                                <td class="p-4 text-red-600 bg-red-50/50 font-medium">Sem reflexo de busca (rooting)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="bg-brand-dark p-6 flex flex-col md:flex-row gap-6 text-white">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-brand-accent mb-1 flex items-center gap-2"><i data-lucide="check" class="w-5 h-5"></i> O QUE FAZER</h4>
+                        <p class="text-sm opacity-90">Deixar o filhote mamar assim que possível (idealmente nas primeiras 4 horas).</p>
+                    </div>
+                    <div class="flex-1 border-t md:border-t-0 md:border-l border-white/20 pt-4 md:pt-0 md:pl-6">
+                        <h4 class="font-bold text-red-400 mb-1 flex items-center gap-2"><i data-lucide="x" class="w-5 h-5"></i> O QUE NÃO FAZER</h4>
+                        <p class="text-sm opacity-90">Alimentar um filhote frio - aquecer primeiro, depois alimentar.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The 3-H Syndrome Alert -->
+        <div class="print-break-avoid bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl shadow-sm mb-12">
+            <div class="flex items-start gap-4">
+                <div class="text-red-500 mt-1">
+                    <i data-lucide="flame" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-red-800 mb-2">🔥 A SÍNDROME DOS 3-H (Seu Inimigo nº 1)</h3>
+                    <p class="text-red-700 mb-4">Vigie esta combinação letal na primeira semana:</p>
+                    <ol class="list-decimal list-inside space-y-2 text-red-800 font-medium bg-white p-4 rounded-lg border border-red-100 shadow-sm">
+                        <li><span class="font-bold">Hipotermia</span> (filhote frio) <span class="text-gray-400">→</span> não digere <span class="text-gray-400">→</span> leva à...</li>
+                        <li><span class="font-bold">Hipoglicemia</span> (baixa glicose) <span class="text-gray-400">→</span> sem energia <span class="text-gray-400">→</span> leva à...</li>
+                        <li><span class="font-bold">Desidratação</span> (prega cutânea, gengivas secas) <span class="text-gray-400">→</span> colapso orgânico</li>
+                    </ol>
+                    <div class="mt-4 flex items-center gap-2 text-sm font-bold text-red-900 bg-red-200/50 p-3 rounded inline-block">
+                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                        A SOLUÇÃO: Aquecer primeiro (1h-1h30), DEPOIS alimentar. Nunca alimentar um filhote frio.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hour 12 Section -->
+        <section class="print-break-avoid mb-12">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-brand-light text-white font-bold px-4 py-2 rounded-lg shadow-md">HORA 12</div>
+                <h3 class="text-2xl font-bold text-brand-dark">Primeira Grande Checagem</h3>
+            </div>
+            
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3 text-brand-accent">
+                        <i data-lucide="thermometer" class="w-5 h-5"></i>
+                        <h4 class="font-bold">Temperatura</h4>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">Normal: 35-37°C (95-99°F)</div>
+                    <div class="text-xs bg-red-50 text-red-700 p-2 rounded border border-red-100">
+                        <strong>Ação:</strong> Se < 36°C (97°F), aquecer gradualmente por 1h-1h30.
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3 text-brand-accent">
+                        <i data-lucide="droplet" class="w-5 h-5"></i>
+                        <h4 class="font-bold">Glicose no Sangue</h4>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">Normal: 90+ mg/dL</div>
+                    <div class="text-xs bg-red-50 text-red-700 p-2 rounded border border-red-100">
+                        <strong>Ação:</strong> Se < 90, dar sucedâneo de leite (mamadeira/sonda).
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3 text-brand-accent">
+                        <i data-lucide="scale" class="w-5 h-5"></i>
+                        <h4 class="font-bold">Peso</h4>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">Normal: Leve ganho ou estável</div>
+                    <div class="text-xs bg-red-50 text-red-700 p-2 rounded border border-red-100">
+                        <strong>Ação:</strong> Perda → alimentação assistida imediata.
+                    </div>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center gap-2 mb-3 text-brand-accent">
+                        <i data-lucide="activity" class="w-5 h-5"></i>
+                        <h4 class="font-bold">Atividade</h4>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">Normal: Mama ativamente, se move</div>
+                    <div class="text-xs bg-red-50 text-red-700 p-2 rounded border border-red-100">
+                        <strong>Ação:</strong> Letárgico, não mama → consulta veterinária.
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-100 md:col-span-2 lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-3 text-brand-accent">
+                        <i data-lucide="baby" class="w-5 h-5"></i>
+                        <h4 class="font-bold">Avaliação de Fezes</h4>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1 text-sm bg-green-50 p-2 rounded text-green-800 border border-green-100">
+                            <strong>Normal:</strong> Laranja/amarelo, pastosas
+                        </div>
+                        <div class="flex-1 text-sm bg-red-50 p-2 rounded text-red-800 border border-red-100">
+                            <strong>Ação Requerida:</strong> Brancas (má absorção), aquosas ou ausentes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hour 24 Section -->
+        <section class="print-break-avoid mb-12">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-brand-light text-white font-bold px-4 py-2 rounded-lg shadow-md">HORA 24</div>
+                <h3 class="text-2xl font-bold text-brand-dark">Marco Crítico</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-blue-50 p-4 border-b border-blue-100 text-blue-800 text-sm flex items-center gap-2">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                    <span><strong>Número Chave:</strong> Filhotes saudáveis DEVEM ganhar peso todo dia. Estagnação = falha no desenvolvimento.</span>
+                </div>
+                <table class="w-full text-left">
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="group hover:bg-gray-50 transition-colors">
+                            <td class="p-4 w-1/3 font-semibold text-brand-dark">Ganho de Peso</td>
+                            <td class="p-4 w-1/3 text-green-600">+1.5% mínimo desde o nascimento</td>
+                            <td class="p-4 w-1/3 text-red-500 font-medium">Estagnado ou perda</td>
+                        </tr>
+                        <tr class="group hover:bg-gray-50 transition-colors">
+                            <td class="p-4 font-semibold text-brand-dark">Temperatura</td>
+                            <td class="p-4 text-green-600">36-38°C (97-100°F)</td>
+                            <td class="p-4 text-red-500 font-medium">Ainda abaixo de 36°C (97°F)</td>
+                        </tr>
+                        <tr class="group hover:bg-gray-50 transition-colors">
+                            <td class="p-4 font-semibold text-brand-dark">Sucção</td>
+                            <td class="p-4 text-green-600">Forte, regular</td>
+                            <td class="p-4 text-red-500 font-medium">Fraca, chora após mamar</td>
+                        </tr>
+                        <tr class="group hover:bg-gray-50 transition-colors">
+                            <td class="p-4 font-semibold text-brand-dark">Pele</td>
+                            <td class="p-4 text-green-600">Rosada, elástica</td>
+                            <td class="p-4 text-red-500 font-medium">Prega cutânea (desidratação), vermelha/quente</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Hour 48 Section -->
+        <section class="print-break-avoid mb-12">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-brand-dark text-white font-bold px-4 py-2 rounded-lg shadow-md border border-brand-accent">HORA 48</div>
+                <h3 class="text-2xl font-bold text-brand-dark">Fora da Zona de Perigo</h3>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-8 border-brand-accent">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <div class="text-gray-500 text-sm uppercase tracking-wide mb-1">Meta de Peso</div>
+                        <div class="text-2xl font-bold text-brand-dark">+2.7% min</div>
+                        <div class="text-xs text-gray-400">desde Dia 1</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-500 text-sm uppercase tracking-wide mb-1">Atividade</div>
+                        <div class="text-2xl font-bold text-brand-dark">Sucção Ativa</div>
+                        <div class="text-xs text-gray-400">Reflexos fortes</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-500 text-sm uppercase tracking-wide mb-1">Eliminação</div>
+                        <div class="text-2xl font-bold text-brand-dark">Regular</div>
+                        <div class="text-xs text-gray-400">Urina e Fezes</div>
+                    </div>
+                </div>
+                <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+                    <p class="text-red-600 font-semibold text-sm bg-red-50 inline-block px-4 py-2 rounded-full">
+                        Se houver problemas nas 48h apesar de aquecer + alimentar → <span class="underline">Visita veterinária obrigatória</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checklists & Environment -->
+        <div class="grid md:grid-cols-2 gap-8 mb-16">
+            
+            <!-- Emergency Checklist -->
+            <div class="print-break-avoid bg-white rounded-xl shadow-lg p-6 border border-red-100">
+                <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
+                    <i data-lucide="phone-call" class="w-5 h-5"></i> LIGAR PARA O VET IMEDIATAMENTE SE:
+                </h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-sm text-gray-700">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0"></i> Escore APGAR abaixo de 4 ao nascer
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-gray-700">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0"></i> A temperatura não sobe apesar do aquecimento
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-gray-700">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0"></i> Sem ganho de peso às 24 horas
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-gray-700">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0"></i> Fezes brancas (má absorção)
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-gray-700">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 shrink-0"></i> Chora após mamar (leite tóxico)
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Environment Essentials -->
+            <div class="print-break-avoid bg-brand-dark rounded-xl shadow-lg p-6 text-white">
+                <h3 class="text-xl font-bold text-brand-accent mb-4 flex items-center gap-2">
+                    <i data-lucide="home" class="w-5 h-5"></i> Requisitos do Ambiente
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-3">
+                        <div class="bg-white/10 p-2 rounded">
+                            <i data-lucide="thermometer" class="w-5 h-5 text-brand-accent"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">Temperatura do Ninho</div>
+                            <div class="text-xs text-gray-300">30-32°C (85-88°F) na Semana 1</div>
+                        </div>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <div class="bg-white/10 p-2 rounded">
+                            <i data-lucide="droplets" class="w-5 h-5 text-brand-accent"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">Umidade</div>
+                            <div class="text-xs text-gray-300">55% ±10%</div>
+                        </div>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <div class="bg-white/10 p-2 rounded">
+                            <i data-lucide="shield-plus" class="w-5 h-5 text-brand-accent"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">Higiene</div>
+                            <div class="text-xs text-gray-300">Desinfetar cordão umbilical 2-3x ao dia</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Positive Indicators -->
+        <div class="print-break-avoid bg-green-50 rounded-xl p-6 border border-green-200 mb-16">
+            <h3 class="text-lg font-bold text-green-800 mb-4">✅ INDICADORES DE SUCESSO:</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="flex items-center gap-2 text-sm text-green-700">
+                    <i data-lucide="check" class="w-4 h-4"></i> Filhotes ganhando peso diariamente
+                </div>
+                <div class="flex items-center gap-2 text-sm text-green-700">
+                    <i data-lucide="check" class="w-4 h-4"></i> Mamam vigorosamente a cada 2-3 horas
+                </div>
+                <div class="flex items-center gap-2 text-sm text-green-700">
+                    <i data-lucide="check" class="w-4 h-4"></i> Temperatura estável na faixa normal
+                </div>
+                <div class="flex items-center gap-2 text-sm text-green-700">
+                    <i data-lucide="check" class="w-4 h-4"></i> Ativos, quentes ao toque, gengivas rosadas
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Footer -->
+        <footer class="print-break-avoid bg-brand-dark rounded-2xl overflow-hidden relative text-center p-10 md:p-16 text-white shadow-2xl">
+            <div class="absolute top-0 left-0 w-full h-full bg-brand-accent opacity-10 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-brand-accent to-transparent"></div>
+            
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <h2 class="text-3xl font-serif font-bold mb-4">Este protocolo guia você pelas primeiras 48 horas.</h2>
+                <p class="text-gray-300 mb-8 text-lg">
+                    O Cofre do Criador oferece o sistema completo. Acesse os protocolos que desenvolvi ao longo de 20 anos de prática em reprodução veterinária.
+                </p>
+                
+                <a href="https://emmanuel-fontaine-dogandcatreproduction.teachable.com/p/cofre-criador-compra-confirmada-recursos-caes-gatos" class="inline-flex items-center gap-2 bg-brand-accent hover:bg-brand-accentHover text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-lg text-lg">
+                    Explorar O Cofre do Criador 
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+
+                <div class="mt-12 pt-8 border-t border-white/10 text-sm text-gray-400">
+                    <p>© Dr. Emmanuel Fontaine, DVM, MSc, PhD, ECAR Diplomate</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

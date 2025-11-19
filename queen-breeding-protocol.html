@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Queen Breeding Success Protocol</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX compilation in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print {
+            @page { margin: 1.5cm; }
+            body { background: white; -webkit-print-color-adjust: exact; }
+            nav, footer, button { display: none !important; }
+            .print-hidden { display: none !important; }
+            .print-pb-10 { padding-bottom: 2.5rem !important; }
+            .print-pt-10 { padding-top: 2.5rem !important; }
+            .print-shadow-none { shadow: none !important; box-shadow: none !important; }
+            .print-border { border: 1px solid #eee !important; }
+            .print-block { display: block !important; }
+            .break-inside-avoid { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Icons (Inline SVGs for portability) ---
+        const IconBase = ({ children, className, style }) => (
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className={className}
+                style={style}
+            >
+                {children}
+            </svg>
+        );
+
+        const CheckCircle = (props) => <IconBase {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></IconBase>;
+        const AlertTriangle = (props) => <IconBase {...props}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></IconBase>;
+        const Info = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></IconBase>;
+        const Cat = (props) => <IconBase {...props}><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3.1-9-7.56c0-1.25.5-2.5 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5"/></IconBase>;
+        const HeartPulse = (props) => <IconBase {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-2 1.5 3.5h5.27"/></IconBase>;
+        const Home = (props) => <IconBase {...props}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></IconBase>;
+        const Clock = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
+        const Eye = (props) => <IconBase {...props}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></IconBase>;
+        const Printer = (props) => <IconBase {...props}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></IconBase>;
+        const Search = (props) => <IconBase {...props}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></IconBase>;
+        const Activity = (props) => <IconBase {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></IconBase>;
+        const ChevronDown = (props) => <IconBase {...props}><polyline points="6 9 12 15 18 9"/></IconBase>;
+        const ChevronUp = (props) => <IconBase {...props}><polyline points="18 15 12 9 6 15"/></IconBase>;
+
+        // --- Main Application ---
+        const App = () => {
+            const [activeSection, setActiveSection] = useState(null);
+            
+            // Brand Palette
+            const colors = {
+                primary: '#382547', // Deep Purple
+                accent: '#ff7f50',  // Coral
+                lightBg: '#f9f7fb',
+                white: '#ffffff',
+                textMain: '#1f2937',
+                textMuted: '#6b7280'
+            };
+
+            // Data Structure
+            const sections = [
+                {
+                    id: 'health',
+                    title: 'Queen Health Assessment',
+                    icon: <HeartPulse className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Body Condition Score (BCS)',
+                            check: 'Queen at BCS 5/9 (ideal weight)',
+                            why: 'Fat tissue is hormonally active. Over/underweight queens have reduced fertility and poor pregnancy outcomes.'
+                        },
+                        {
+                            label: 'Genetic & Disease Screening',
+                            check: 'Blood type compatibility tested & FIV/FeLV screening current',
+                            why: 'Prevents neonatal isoerythrolysis (blood type mismatch). Infectious diseases compromise fertility.'
+                        },
+                        {
+                            label: 'Gastrointestinal Health',
+                            check: 'No chronic diarrhea or vomiting',
+                            why: "Mother's gut health directly impacts kitten microbiome development."
+                        },
+                        {
+                            label: 'Folic Acid Supplementation',
+                            check: 'Started 2+ weeks before breeding',
+                            why: 'Reduces risk of cleft palates (most common congenital defect in kittens).'
+                        },
+                        {
+                            label: 'Annual Breeding Soundness Exam',
+                            check: 'Vet check-up + bloodwork completed',
+                            why: 'Screens for kidney disease and other hidden conditions that affect fertility.'
+                        }
+                    ]
+                },
+                {
+                    id: 'environment',
+                    title: 'Environmental Optimization',
+                    icon: <Home className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Stress Minimized',
+                            check: 'Consistent routine maintained. No recent changes to environment',
+                            why: 'Chronic stress disrupts gut microbiome and blocks estrus cycles. Cats thrive on familiarity and routine.'
+                        },
+                        {
+                            label: 'Pheromone Diffuser Active',
+                            check: 'Feliway or equivalent installed',
+                            why: 'Reduces anxiety and enhances maternal behavior in breeding queens.'
+                        },
+                        {
+                            label: 'Light Exposure Regulated',
+                            check: '12-14 hours of light daily',
+                            why: 'Queens are seasonal breeders. Proper light triggers estrus cycles. Less than 12 hours suppresses cycling.'
+                        },
+                        {
+                            label: 'Breeding Area Prepared',
+                            check: 'Clean, quiet space ready. Set up 1-2 weeks early',
+                            why: 'Reduces stress. Queen needs time to acclimate to breeding/whelping area.'
+                        }
+                    ]
+                },
+                {
+                    id: 'timing',
+                    title: 'Timing Verification',
+                    icon: <Clock className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Queen in Full Estrus',
+                            check: 'Vocalizing, rolling, presenting. Estrus confirmed (Day 3+ ideal)',
+                            why: 'Peak fertility occurs Day 3 of estrus when ovarian follicles reach maximum size. Silent heats common in Persians—use vaginal smear if unsure.'
+                        },
+                        {
+                            label: '3-Day Mating Schedule Planned',
+                            check: 'Day 1, Day 2, Day 3 breedings scheduled',
+                            why: 'Cats are induced ovulators. 50% ovulate after 1 breeding, 90%+ after 3+ breedings.'
+                        },
+                        {
+                            label: 'Post-Mating Progesterone Test',
+                            check: 'Scheduled 5-7 days post-breeding',
+                            why: "Confirms ovulation occurred (P4 >5 ng/mL). Absence of breeding = #1 cause of infertility. Don't wait 60 days to find out she's not pregnant."
+                        }
+                    ]
+                },
+                {
+                    id: 'male',
+                    title: 'Male Readiness',
+                    icon: <Cat className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Stud Body Condition',
+                            check: 'Tom at BCS 5/9 (ideal weight)',
+                            why: 'Excess fat increases testicular temperature, damaging sperm production.'
+                        },
+                        {
+                            label: 'Semen Quality Assessed',
+                            check: 'Recent spermogram completed (if available)',
+                            why: 'Young males (<1 year) often have poor semen quality. Persian males mature late—wait 12+ months.'
+                        },
+                        {
+                            label: 'Physical Maturity Confirmed',
+                            check: 'Both testicles descended, Penile spines visible, 18-24 months old',
+                            why: 'Penile spines trigger ovulation. Young, inexperienced males may refuse to breed or fail to induce ovulation.'
+                        }
+                    ]
+                },
+                {
+                    id: 'observation',
+                    title: 'Breeding Observation',
+                    icon: <Eye className="w-6 h-6" />,
+                    items: [
+                        {
+                            label: 'Breeding in Tom\'s Territory',
+                            check: 'Queen brought to stud\'s location',
+                            why: 'Males perform best in familiar environment. Reduces stress-related mating refusal.'
+                        },
+                        {
+                            label: 'Sufficient Matings Confirmed',
+                            check: 'Minimum 3 breedings observed across 3 days',
+                            why: 'You MUST observe breedings. Absence of breeding is the #1 cause of infertility in cats.'
+                        },
+                        {
+                            label: 'Post-Coital Reaction Seen',
+                            check: 'Queen showed aggressive reaction, rolling, over-grooming',
+                            why: 'Confirms adequate mating stimulus. If no post-coital reaction, ovulation may not occur.'
+                        }
+                    ]
+                }
+            ];
+
+            const redFlags = [
+                "Queen not cycling despite 12+ hours daily light exposure",
+                "Breeding refusal after multiple pairing attempts",
+                "No post-coital reaction observed",
+                "Progesterone test shows no ovulation (P4 <5 ng/mL)",
+                "Queen aggressive/stressed despite pheromones and routine",
+                "Stud refuses to breed or shows no interest in queen"
+            ];
+
+            const handlePrint = () => {
+                window.print();
+            };
+
+            return (
+                <div className="min-h-screen font-sans text-gray-800 bg-[#f9f7fb]">
+                    
+                    {/* Navigation / Top Bar */}
+                    <nav className="sticky top-0 z-50 shadow-md" style={{ backgroundColor: colors.primary }}>
+                        <div className="max-w-4xl px-4 py-4 mx-auto flex justify-between items-center">
+                            <div className="flex items-center space-x-2 text-white">
+                                <Cat className="w-6 h-6" style={{ color: colors.accent }} />
+                            </div>
+                            <button 
+                                onClick={handlePrint}
+                                className="hidden md:flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full transition-all text-sm font-medium"
+                            >
+                                <Printer className="w-4 h-4" />
+                                <span>Save as PDF</span>
+                            </button>
+                        </div>
+                    </nav>
+
+                    {/* Hero Section */}
+                    <header className="relative text-white pb-24 pt-16 px-6 text-center overflow-hidden print:pb-10 print:pt-10" style={{ backgroundColor: colors.primary }}>
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                        <div className="max-w-3xl mx-auto relative z-10">
+                            <div className="inline-block px-3 py-1 mb-6 text-xs font-bold tracking-widest uppercase rounded-full bg-white/10 border border-white/20 text-white">
+                                Veterinary-Grade Protocol
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
+                                The Queen Breeding <br/>
+                                <span style={{ color: colors.accent }}>Success Protocol</span>
+                            </h1>
+                            <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto font-light">
+                                Your pre-mating diagnostic checklist to maximize fertility and prevent common breeding failures.
+                            </p>
+                            
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-4 print-hidden">
+                                <button 
+                                    onClick={() => {
+                                        const el = document.getElementById('start-checklist');
+                                        el?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="px-8 py-4 font-bold text-white rounded-lg shadow-lg transform transition hover:scale-105"
+                                    style={{ backgroundColor: colors.accent }}
+                                >
+                                    Start Checklist
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Decorative Curve */}
+                        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+                            <svg className="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="#f9f7fb"></path>
+                            </svg>
+                        </div>
+                    </header>
+
+                    <main id="start-checklist" className="max-w-4xl mx-auto px-4 -mt-16 pb-20 relative z-20">
+                        
+                        {/* Introduction Card */}
+                        <div className="bg-white rounded-xl shadow-xl p-8 mb-10 border-t-4 print-shadow-none print-border print-mb-6" style={{ borderColor: colors.accent }}>
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-full bg-purple-100 hidden md:block">
+                                    <Activity className="w-6 h-6 text-purple-700" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold mb-2" style={{ color: colors.primary }}>Why Use This Protocol?</h3>
+                                    <p className="text-gray-600 leading-relaxed">
+                                        This system prevents the 5 most common breeding failures. Designed by Dr. Emmanuel Fontaine, this checklist ensures you don't miss critical steps in the pre-mating phase.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Checklist Sections */}
+                        <div className="space-y-8">
+                            {sections.map((section, idx) => (
+                                <div key={section.id} className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all hover:shadow-xl print-shadow-none print-border break-inside-avoid">
+                                    <div 
+                                        className="p-6 border-b border-gray-100 flex items-center justify-between cursor-pointer select-none bg-white"
+                                        onClick={() => setActiveSection(activeSection === section.id ? null : section.id)}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: colors.primary }}>
+                                                {section.icon}
+                                            </div>
+                                            <div>
+                                                <h2 className="text-xl font-bold text-gray-900">{section.title}</h2>
+                                                <span className="text-sm font-medium" style={{ color: colors.accent }}>{section.items.length} Checkpoints</span>
+                                            </div>
+                                        </div>
+                                        <div className="text-gray-400 print-hidden">
+                                            {activeSection === section.id ? <ChevronUp /> : <ChevronDown />}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Content */}
+                                    <div className={`bg-gray-50 px-6 py-4 space-y-4 ${activeSection === section.id ? 'block' : 'hidden md:block'} print-block`}>
+                                        {section.items.map((item, i) => (
+                                            <ChecklistItem key={i} item={item} colors={colors} index={i} />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Red Flags Section */}
+                        <div className="mt-12 bg-red-50 rounded-2xl border border-red-100 p-8 break-inside-avoid">
+                            <div className="flex items-center gap-3 mb-6">
+                                <AlertTriangle className="w-8 h-8 text-red-500" />
+                                <h2 className="text-2xl font-bold text-gray-900">Red Flags: When to Call Your Vet</h2>
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                {redFlags.map((flag, i) => (
+                                    <div key={i} className="flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm border-l-4 border-red-400">
+                                        <span className="text-red-500 text-lg font-bold">✕</span>
+                                        <p className="text-gray-700 font-medium">{flag}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Author Footer */}
+                        <div className="mt-12 text-center border-t border-gray-200 pt-8 pb-4">
+                            <p className="text-gray-500 font-medium">© Dr. Emmanuel Fontaine, DVM, MSc, PhD, ECAR Diplomate</p>
+                        </div>
+
+                    </main>
+
+                    {/* CTA / Footer Area */}
+                    <footer className="text-white py-16 px-4 print-hidden" style={{ backgroundColor: colors.primary }}>
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h2 className="text-3xl font-bold mb-6">Ready for the Full System?</h2>
+                            <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
+                                Inside <strong>The Breeder Vault</strong>, you'll find my complete Breeder Operating System—the same frameworks I've developed over 20 years of reproductive veterinary practice.
+                            </p>
+                            
+                            <div className="grid md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto mb-10">
+                                <FeatureItem text="Complete feline reproductive protocols" />
+                                <FeatureItem text="Health assessment systems" />
+                                <FeatureItem text="Breeding program management frameworks" />
+                                <FeatureItem text="Decision-making frameworks" />
+                            </div>
+
+                            <a 
+                                href="https://emmanuel-fontaine-dogandcatreproduction.teachable.com/p/the-breeder-vault-dog-cat-breeding-resources" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="px-10 py-5 text-lg font-bold text-white rounded-full shadow-2xl transform transition hover:scale-105 hover:shadow-coral-500/20 inline-block" 
+                                style={{ backgroundColor: colors.accent }}
+                            >
+                                Explore The Breeder Vault →
+                            </a>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        // --- Helper Components ---
+
+        const ChecklistItem = ({ item, colors, index }) => {
+            const [isChecked, setIsChecked] = useState(false);
+            const [showWhy, setShowWhy] = useState(false);
+
+            return (
+                <div className={`group relative bg-white p-4 rounded-xl border transition-all duration-200 ${isChecked ? 'border-green-200 bg-green-50/30' : 'border-gray-200 hover:border-purple-200'}`}>
+                    <div className="flex items-start gap-4">
+                        <button 
+                            onClick={() => setIsChecked(!isChecked)}
+                            className={`mt-1 flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                                isChecked 
+                                ? 'bg-green-500 border-green-500 text-white' 
+                                : 'border-gray-300 text-transparent hover:border-purple-400'
+                            }`}
+                        >
+                            <CheckCircle className="w-4 h-4" />
+                        </button>
+
+                        <div className="flex-1">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h4 className={`font-bold text-lg leading-tight mb-1 transition-colors ${isChecked ? 'text-green-800' : 'text-gray-800'}`}>
+                                        {item.label}
+                                    </h4>
+                                    <p className={`text-gray-600 ${isChecked ? 'text-green-700' : ''}`}>
+                                        {item.check}
+                                    </p>
+                                </div>
+                                
+                                <button 
+                                    onClick={() => setShowWhy(!showWhy)}
+                                    className="ml-2 p-1.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-purple-600 transition-colors"
+                                    title="Why it matters"
+                                >
+                                    <Info className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <div className={`overflow-hidden transition-all duration-300 ${showWhy ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
+                                <div className="bg-blue-50 p-3 rounded-lg text-sm text-blue-800 flex gap-2 border border-blue-100">
+                                    <Search className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <span className="font-bold block mb-1 text-xs uppercase tracking-wider opacity-70">Why It Matters</span>
+                                        {item.why}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FeatureItem = ({ text }) => (
+            <div className="flex items-center gap-3 bg-white/10 p-3 rounded-lg">
+                <div className="w-2 h-2 rounded-full bg-[#ff7f50]"></div>
+                <span className="font-medium text-gray-100">{text}</span>
+            </div>
+        );
+
+        // Render the App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
